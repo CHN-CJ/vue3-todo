@@ -9,7 +9,8 @@
 
 <script lang="ts">
 
-import { computed, defineComponent, onMounted } from '@vue/runtime-core';
+import { defineComponent, onMounted } from '@vue/runtime-core';
+import { computed } from 'vue';
 import { Store, useStore } from 'vuex';
 import TodoInput from './components/TodoInput/index.vue'
 import TodoList from './components/TodoList/index.vue'
@@ -23,7 +24,7 @@ export default defineComponent({
   },
   setup() {
     const { setTodoList }: IUseTodo = useTodo();
-    const store: Store<any> = useStore()
+    const store: Store<any> = useStore();
 
     onMounted(() => {
       setTodoList();

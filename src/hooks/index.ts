@@ -1,13 +1,14 @@
-import { SET_TODO, SET_TODO_LIST } from "@/store/actionTypes";
+import { SET_TODO, SET_TODO_LIST, REMOVE_TODO, SET_TODO_STATUS, SET_DOING_STATUS } from "@/store/actionTypes";
 import { ITodo, TODO_STATUS } from "@/typings";
+import { watch } from "vue";
 import { Store, useStore } from "vuex";
 
 export interface IUseTodo {
     setTodo: (value: string) => void;
     setTodoList: () => void;
-    removeTodo: () => void;
-    setStatus: () => void;
-    setDoing: () => void;
+    removeTodo: (id: number) => void;
+    setStatus: (id: number) => void;
+    setDoing: (id: number) => void;
 }
 
 interface IUseLocalStorage {
@@ -21,6 +22,12 @@ function useTodo(): IUseTodo {
     const { getLocalList, setLocalList }: IUseLocalStorage = useLocalStorage();
     const todoList: ITodo[] = getLocalList();
 
+    watch(() => {
+        return store.state.list;
+    }, (todoList) => {
+        setLocalList(todoList);
+    });
+
     function setTodo(value: string): void {
         const todo: ITodo = {
             id: new Date().getTime(),
@@ -29,24 +36,23 @@ function useTodo(): IUseTodo {
         }
 
         store.dispatch(SET_TODO, todo);
-        setLocalList(store.state.list);
     }
 
     function setTodoList() {
         store.dispatch(SET_TODO_LIST, todoList);
-        // console.log(store.state.list);
+        // console.log(store.state.list);id: number
     }
 
-    function removeTodo() {
-
+    function removeTodo(id: number): void {
+        store.dispatch(REMOVE_TODO, id);
     }
 
-    function setStatus() {
-
+    function setStatus(id: number): void {
+        store.dispatch(SET_TODO_STATUS, id);
     }
 
-    function setDoing() {
-
+    function setDoing(id: number): void {
+        store.dispatch(SET_DOING_STATUS, id);
     }
 
     return {
